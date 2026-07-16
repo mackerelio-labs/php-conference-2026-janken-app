@@ -1,0 +1,29 @@
+{
+  "name": "janken-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/context-zone": "~2.9.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.220.0",
+    "@opentelemetry/instrumentation": "^0.220.0",
+    "@opentelemetry/instrumentation-fetch": "^0.220.0",
+    "@opentelemetry/resources": "~2.9.0",
+    "@opentelemetry/sdk-trace-web": "~2.9.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~7.0.2",
+    "vite": "^6.0.7"
+  }
+}

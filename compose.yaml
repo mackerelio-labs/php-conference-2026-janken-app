@@ -1,0 +1,77 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: docker/php
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: janken
+      DB_USERNAME: janken
+      DB_PASSWORD: janken
+      OTEL_PHP_AUTOLOAD_ENABLED: "true"
+      OTEL_SERVICE_NAME: janken-api
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=janken,deployment.environment.name=local
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_PROPAGATORS: tracecontext,baggage
+    depends_on:
+      otel-collector:
+        condition: service_started
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: janken
+      POSTGRES_USER: janken
+      POSTGRES_PASSWORD: janken
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U janken -d janken"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  otel-collector:
+    image: mackerel/otelcol-mackerel:0.15.0
+    command: ["--config=/home/nonroot/config.yaml"]
+    volumes:
+      - ./docker/collector/config.yaml:/home/nonroot/config.yaml:ro
+    environment:
+      # 未設定なら dummy で起動する(mackerel_otlp exporter はキー必須のため。
+      # 送信は Invalid API Key で失敗し続けるが、受信・アプリ動作には影響しない)
+      MACKEREL_APIKEY: ${MACKEREL_APIKEY:-dummy}
+    ports:
+      - "127.0.0.1:4318:4318"
+
+  frontend-dev:
+    profiles: ["dev"]
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "127.0.0.1:5173:5173"
+    depends_on:
+      - web
+
+volumes:
+  db-data:

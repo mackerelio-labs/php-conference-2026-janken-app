@@ -1,0 +1,346 @@
+{
+  "title": "後出しジャンケンタイムアタック!",
+  "urlPath": "php-conference-2026-janken",
+  "createdAt": 1783864295,
+  "updatedAt": 1783937277,
+  "memo": "PHP カンファレンス 2026 ブース展示「後出しジャンケンタイムアタック!」のライブ成績です。1 プレイごとに OpenTelemetry のトレース・ログ・メトリックが送信されます。",
+  "widgets": [
+    {
+      "type": "value",
+      "title": "総プレイ回数",
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 6,
+        "height": 6
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.games[$__range]))",
+        "legend": "games"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "ゲーム"
+    },
+    {
+      "type": "graph",
+      "title": "プレイ回数の推移(10分毎・難易度別)",
+      "layout": {
+        "x": 6,
+        "y": 0,
+        "width": 18,
+        "height": 6
+      },
+      "metric": null,
+      "graph": {
+        "type": "query",
+        "query": "sum by (difficulty) (sum_over_time(janken.games[10m]))",
+        "legend": "{{difficulty}} 級"
+      },
+      "range": null
+    },
+    {
+      "type": "value",
+      "title": "🟢 OK 級 勝率(当日)",
+      "layout": {
+        "x": 0,
+        "y": 6,
+        "width": 8,
+        "height": 6
+      },
+      "metric": {
+        "type": "query",
+        "query": "100 * (sum(sum_over_time(janken.games{result=\"win\", difficulty=\"ok\"}[$__range])) or vector(0)) / sum(sum_over_time(janken.games{difficulty=\"ok\"}[$__range]))",
+        "legend": "ok win rate"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "%"
+    },
+    {
+      "type": "value",
+      "title": "🟡 WARN 級 勝率(当日)",
+      "layout": {
+        "x": 8,
+        "y": 6,
+        "width": 8,
+        "height": 6
+      },
+      "metric": {
+        "type": "query",
+        "query": "100 * (sum(sum_over_time(janken.games{result=\"win\", difficulty=\"warn\"}[$__range])) or vector(0)) / sum(sum_over_time(janken.games{difficulty=\"warn\"}[$__range]))",
+        "legend": "warn win rate"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "%"
+    },
+    {
+      "type": "value",
+      "title": "🔴 CRITICAL 級 勝率(当日)",
+      "layout": {
+        "x": 16,
+        "y": 6,
+        "width": 8,
+        "height": 6
+      },
+      "metric": {
+        "type": "query",
+        "query": "100 * (sum(sum_over_time(janken.games{result=\"win\", difficulty=\"critical\"}[$__range])) or vector(0)) / sum(sum_over_time(janken.games{difficulty=\"critical\"}[$__range]))",
+        "legend": "critical win rate"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "%"
+    },
+    {
+      "type": "value",
+      "title": "🌀 つられ率(当日)",
+      "layout": {
+        "x": 0,
+        "y": 12,
+        "width": 6,
+        "height": 6
+      },
+      "metric": {
+        "type": "query",
+        "query": "100 * (sum(sum_over_time(janken.games{result.reason=\"copy\"}[$__range])) or vector(0)) / sum(sum_over_time(janken.games[$__range]))",
+        "legend": "copy rate"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 1,
+      "suffix": "%"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✊ → あなた ✊ 🌀",
+      "layout": {
+        "x": 6,
+        "y": 12,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"rock\", hand=\"rock\"}[$__range])) or vector(0)",
+        "legend": "rock-rock"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✊ → あなた ✌️",
+      "layout": {
+        "x": 12,
+        "y": 12,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"rock\", hand=\"scissors\"}[$__range])) or vector(0)",
+        "legend": "rock-scissors"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✊ → あなた ✋",
+      "layout": {
+        "x": 18,
+        "y": 12,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"rock\", hand=\"paper\"}[$__range])) or vector(0)",
+        "legend": "rock-paper"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✌️ → あなた ✊",
+      "layout": {
+        "x": 6,
+        "y": 16,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"scissors\", hand=\"rock\"}[$__range])) or vector(0)",
+        "legend": "scissors-rock"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✌️ → あなた ✌️ 🌀",
+      "layout": {
+        "x": 12,
+        "y": 16,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"scissors\", hand=\"scissors\"}[$__range])) or vector(0)",
+        "legend": "scissors-scissors"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✌️ → あなた ✋",
+      "layout": {
+        "x": 18,
+        "y": 16,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"scissors\", hand=\"paper\"}[$__range])) or vector(0)",
+        "legend": "scissors-paper"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "markdown",
+      "title": "トレース・ログを見る",
+      "layout": {
+        "x": 0,
+        "y": 18,
+        "width": 6,
+        "height": 6
+      },
+      "metric": null,
+      "graph": null,
+      "range": null,
+      "markdown": "- [🎮 ゲームトレース一覧](https://mackerel.io/my/traces?service=janken-game&serviceNamespace=janken#period=1h)\n- [🐘 アプリ(API)トレース一覧](https://mackerel.io/my/traces?service=janken-api&serviceNamespace=janken#period=1h)\n- [🌐 ブラウザトレース一覧](https://mackerel.io/my/traces?service=janken-web&serviceNamespace=janken#period=1h)\n- [🪵 ゲームログ一覧](https://mackerel.io/my/logs/search?service=janken-game&serviceNamespace=janken&timezone=Local&severities=ERROR,TRACE,WARN,DEBUG,INFO,FATAL#period=1h)"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✋ → あなた ✊",
+      "layout": {
+        "x": 6,
+        "y": 20,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"paper\", hand=\"rock\"}[$__range])) or vector(0)",
+        "legend": "paper-rock"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✋ → あなた ✌️",
+      "layout": {
+        "x": 12,
+        "y": 20,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"paper\", hand=\"scissors\"}[$__range])) or vector(0)",
+        "legend": "paper-scissors"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "value",
+      "title": "CPU ✋ → あなた ✋ 🌀",
+      "layout": {
+        "x": 18,
+        "y": 20,
+        "width": 6,
+        "height": 4
+      },
+      "metric": {
+        "type": "query",
+        "query": "sum(sum_over_time(janken.hands{cpu_hand=\"paper\", hand=\"paper\"}[$__range])) or vector(0)",
+        "legend": "paper-paper"
+      },
+      "graph": null,
+      "range": null,
+      "fractionSize": 0,
+      "suffix": "回"
+    },
+    {
+      "type": "graph",
+      "title": "難易度別 平均リアクションタイム (ms)",
+      "layout": {
+        "x": 0,
+        "y": 24,
+        "width": 12,
+        "height": 6
+      },
+      "metric": null,
+      "graph": {
+        "type": "query",
+        "query": "sum by (difficulty) (sum_over_time(janken.reaction_time_ms.sum[$__range])) / sum by (difficulty) (sum_over_time(janken.reaction_time_ms.count[$__range]))",
+        "legend": "{{difficulty}} 級"
+      },
+      "range": null
+    },
+    {
+      "type": "graph",
+      "title": "リアクションタイム(ゲームごと) (ms)",
+      "layout": {
+        "x": 12,
+        "y": 24,
+        "width": 12,
+        "height": 6
+      },
+      "metric": null,
+      "graph": {
+        "type": "query",
+        "query": "janken.reaction_time_ms.max",
+        "legend": "{{difficulty}} 級"
+      },
+      "range": null,
+      "referenceLines": [
+        {
+          "label": "CRITICAL 級の制限 (0.5秒)",
+          "value": 500
+        }
+      ]
+    }
+  ]
+}

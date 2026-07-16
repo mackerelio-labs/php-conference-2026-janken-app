@@ -1,0 +1,18 @@
+.git
+.gitignore
+.env
+.env.*
+**/.env
+**/.env.*
+**/node_modules
+**/vendor
+**/dist
+**/build
+**/.DS_Store
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+# .env.example は配布物なので除外しない
+!.env.example
+!**/.env.example
